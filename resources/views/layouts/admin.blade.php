@@ -175,8 +175,14 @@
                     </div>
                 </div>
 
+                <!-- Real-time Clock -->
+                <div class="hidden xl:flex flex-col items-end px-8 border-r border-slate-100 dark:border-slate-800">
+                    <div id="real-time-clock" class="text-[20px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">00:00:00</div>
+                    <div id="real-time-date" class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2">Memuat...</div>
+                </div>
+
                 <!-- User Dropdown -->
-                <div x-data="{ open: false }" class="relative">
+                <div x-data="{ open: false }" class="relative pl-8">
                     <button @click="open = !open" @click.away="open = false" class="flex items-center space-x-4 pr-4 transition-all group focus:outline-none">
                         <img src="{{ auth()->user()->profile_photo_url }}" class="w-10 h-10 rounded-xl object-cover shadow-md border border-slate-200 dark:border-slate-700 group-hover:scale-105 transition-transform" alt="Avatar">
                         <div class="text-left hidden lg:block">
@@ -230,5 +236,23 @@
     </div>
 
     @livewireScripts
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const clockEl = document.getElementById('real-time-clock');
+            const dateEl = document.getElementById('real-time-date');
+            
+            if (clockEl) {
+                clockEl.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+            }
+            if (dateEl) {
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateEl.innerText = now.toLocaleDateString('id-ID', options);
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+        document.addEventListener('livewire:navigated', updateClock);
+    </script>
 </body>
 </html>

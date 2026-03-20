@@ -32,9 +32,15 @@
                     </div>
 
                     <!-- Placeholder/Loading -->
-                    <div x-show="!cameraReady" class="absolute inset-0 flex flex-col items-center justify-center space-y-4 bg-slate-900 z-30">
+                    <div x-show="!cameraReady && !processing" class="absolute inset-0 flex flex-col items-center justify-center space-y-4 bg-slate-900 z-30">
                         <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
                         <p class="text-[12px] font-bold text-slate-400 uppercase tracking-widest">Inisialisasi Kamera...</p>
+                    </div>
+
+                    <!-- Processing State -->
+                    <div x-show="processing" class="absolute inset-0 flex flex-col items-center justify-center space-y-4 bg-slate-900/90 z-40 backdrop-blur-sm">
+                        <div class="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-[14px] font-bold text-white uppercase tracking-[0.2em] animate-pulse">Memproses Absensi...</p>
                     </div>
                 </div>
             </div>
@@ -90,6 +96,7 @@
                 html5QrCode: null,
                 scanning: false,
                 cameraReady: false,
+                processing: false,
                 message: '',
                 messageType: 'success',
                 
@@ -97,6 +104,7 @@
                     this.html5QrCode = new Html5Qrcode("reader");
                     
                     window.addEventListener('qrSuccess', (e) => {
+                        this.processing = false;
                         this.message = e.detail[0];
                         this.messageType = 'success';
                         this.stopScanner();
@@ -104,13 +112,14 @@
                     });
 
                     window.addEventListener('qrError', (e) => {
+                        this.processing = false;
                         this.message = e.detail[0];
                         this.messageType = 'error';
                         setTimeout(() => this.message = '', 3000);
                     });
                 },
 
-                startScanner() {
+                async startScanner() {
                     const isSecure = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost';
                     
                     if (!isSecure) {
@@ -122,38 +131,42 @@
                     this.message = '';
                     this.cameraReady = false;
                     
-                    this.html5QrCode.start(
-                        { facingMode: "environment" }, 
-                        config, 
-                        (decodedText) => {
-                            this.scanning = false;
-                            this.stopScanner();
-                            this.message = 'Memproses Kode QR...';
-                            Livewire.dispatch('processQrCode', { code: decodedText });
-                        },
-                        (errorMessage) => {
-                            // Ignored (frequent polling)
-                        }
-                    ).then(() => {
+                    try {
+                        await this.html5QrCode.start(
+                            { facingMode: "environment" }, 
+                            config, 
+                            async (decodedText) => {
+                                if (!this.scanning) return;
+                                this.scanning = false;
+                                this.processing = true;
+                                
+                                await this.stopScanner();
+                                Livewire.dispatch('processQrCode', { code: decodedText });
+                            },
+                            (errorMessage) => { }
+                        );
                         this.scanning = true;
                         this.cameraReady = true;
-                    }).catch(err => {
+                    } catch (err) {
                         console.error("Camera fail", err);
                         if (err.toString().includes("Permission")) {
                             alert("Izin kamera ditolak. Silakan berikan izin melalui menu pengaturan browser di pojok kiri atas (ikon gembok).");
                         } else {
                             alert("Gagal mengakses kamera: " + err);
                         }
-                    });
+                    }
                 },
 
-                stopScanner() {
-                    if (this.html5QrCode && this.scanning) {
-                        this.html5QrCode.stop().then(() => {
-                            this.scanning = false;
-                            this.cameraReady = false;
-                        });
+                async stopScanner() {
+                    if (this.html5QrCode && (this.scanning || this.cameraReady)) {
+                        try {
+                            await this.html5QrCode.stop();
+                        } catch (e) {
+                            console.warn("Stop error", e);
+                        }
                     }
+                    this.scanning = false;
+                    this.cameraReady = false;
                 }
             }
         }
