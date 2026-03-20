@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jalupab - Sistem Absensi Online Modern</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -18,8 +19,8 @@
     <header class="fixed top-0 w-full z-50 px-6 py-4">
         <div class="max-w-7xl mx-auto glass border border-white/40 rounded-[2rem] px-8 py-4 flex items-center justify-between shadow-xl shadow-indigo-100/20">
             <div class="flex items-center space-x-3">
-                <div class="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-200">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="w-11 h-11 bg-white p-1 rounded-xl shadow-lg border border-slate-100 overflow-hidden">
+                    <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
                 </div>
                 <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">Jalupab</span>
             </div>
@@ -256,8 +257,8 @@
     <footer class="py-12 px-6 border-t border-slate-200">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 text-slate-400 text-sm font-medium">
             <div class="flex items-center space-x-3 grayscale opacity-70">
-                <div class="bg-slate-400 p-1 rounded-lg">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="w-8 h-8 bg-white p-1 rounded-lg border border-slate-200 overflow-hidden">
+                    <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
                 </div>
                 <span class="text-lg font-bold text-slate-800">Jalupab</span>
             </div>

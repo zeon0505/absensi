@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karyawan Portal - Jalupab</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Immediate dark mode application to prevent flash
@@ -103,8 +104,8 @@
         >
             <!-- Logo Section -->
             <div class="h-24 flex items-center px-6 border-b border-slate-100 dark:border-slate-800 overflow-hidden shrink-0">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <div class="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-1 border border-slate-100 dark:border-slate-700">
+                    <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
                 </div>
                 <div x-show="sidebarOpen" x-transition.opacity class="ml-4 whitespace-nowrap">
                     <span class="text-[19px] font-semibold tracking-tight text-slate-900 dark:text-white">JALUPAB</span>
