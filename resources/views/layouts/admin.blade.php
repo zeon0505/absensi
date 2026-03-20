@@ -258,18 +258,27 @@
         // Welcome Voice Greeting
         window.addEventListener('playWelcome', (event) => {
             const userName = event.detail.name || '';
-            const message = `Selamat datang, ${userName}.`;
+            const now = new Date();
+            const hour = now.getHours();
+            let greeting = 'Good day';
+            
+            if (hour >= 5 && hour < 12) greeting = 'Good morning';
+            else if (hour >= 12 && hour < 18) greeting = 'Good afternoon';
+            else if (hour >= 18 && hour < 22) greeting = 'Good evening';
+            else greeting = 'Good night';
+
+            const message = `${greeting}, ${userName}. Welcome back to admin portal.`;
             
             const speak = () => {
                 const utterance = new SpeechSynthesisUtterance(message);
-                utterance.lang = 'id-ID';
+                utterance.lang = 'en-US';
                 utterance.rate = 1.0;
                 utterance.pitch = 1.0;
                 
-                // Find Indonesian voice if possible
+                // Find English voice
                 const voices = window.speechSynthesis.getVoices();
-                const idVoice = voices.find(v => v.lang === 'id-ID' || v.lang === 'id_ID');
-                if (idVoice) utterance.voice = idVoice;
+                const enVoice = voices.find(v => v.lang.includes('en-') || v.lang.includes('en_'));
+                if (enVoice) utterance.voice = enVoice;
                 
                 window.speechSynthesis.speak(utterance);
             };
