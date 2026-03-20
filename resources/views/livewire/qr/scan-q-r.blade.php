@@ -48,11 +48,11 @@
                          x-transition:enter="transition ease-out duration-300"
                          x-transition:enter-start="opacity-0 scale-50"
                          x-transition:enter-end="opacity-100 scale-100"
-                         class="absolute inset-0 flex flex-col items-center justify-center bg-emerald-500/95 z-50 backdrop-blur-md">
-                        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce">
-                            <svg class="w-16 h-16 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+                         class="absolute inset-0 flex flex-col items-center justify-center bg-emerald-600/70 z-50 backdrop-blur-[2px]">
+                        <div class="w-24 h-24 bg-white/90 rounded-full flex items-center justify-center shadow-2xl animate-bounce">
+                            <svg class="w-16 h-16 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
                         </div>
-                        <p class="text-[18px] font-bold text-white mt-8 uppercase tracking-[0.3em]">Absensi Berhasil!</p>
+                        <p class="text-[18px] font-bold text-white mt-8 uppercase tracking-[0.3em] drop-shadow-md">Absensi Berhasil!</p>
                     </div>
                 </div>
             </div>
@@ -144,7 +144,14 @@
                         return;
                     }
 
-                    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+                    const config = { 
+                        fps: 25, 
+                        qrbox: { width: 280, height: 280 },
+                        aspectRatio: 1.0,
+                        experimentalFeatures: {
+                            useBarCodeDetectorIfSupported: true
+                        }
+                    };
                     this.message = '';
                     this.cameraReady = false;
                     
