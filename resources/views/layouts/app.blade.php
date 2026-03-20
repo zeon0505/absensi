@@ -105,7 +105,7 @@
             <!-- Logo Section -->
             <div class="h-24 flex items-center px-6 border-b border-slate-100 dark:border-slate-800 overflow-hidden shrink-0">
                 <div class="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-1 border border-slate-100 dark:border-slate-700">
-                    <img src="{{ asset('images/logo_sidebar.png') }}" class="w-full h-full object-contain" alt="Logo">
+                    <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
                 </div>
                 <div x-show="sidebarOpen" x-transition.opacity class="ml-4 whitespace-nowrap">
                     <span class="text-[19px] font-semibold tracking-tight text-slate-900 dark:text-white">JALUPAB</span>
