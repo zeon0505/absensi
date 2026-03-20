@@ -12,6 +12,14 @@ class Dashboard extends Component
 {
     public string $chartRange = '7'; // Default to 7 days
 
+    public function mount()
+    {
+        if (!session()->has('greeted_admin')) {
+            $this->dispatch('playWelcome', name: auth()->user()->name);
+            session()->put('greeted_admin', true);
+        }
+    }
+
     public function render()
     {
         $user = auth()->user();

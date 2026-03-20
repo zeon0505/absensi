@@ -20,6 +20,14 @@ class Dashboard extends Component
     public $taskTitle, $taskDescription, $taskFile, $selectedClassId;
     public $message = '';
 
+    public function mount()
+    {
+        if (!session()->has('greeted')) {
+            $this->dispatch('playWelcome', name: Auth::user()->name);
+            session()->put('greeted', true);
+        }
+    }
+
     public function joinClass()
     {
         $this->validate([

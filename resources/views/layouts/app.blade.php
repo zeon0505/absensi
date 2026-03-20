@@ -240,6 +240,32 @@
         setInterval(updateClock, 1000);
         updateClock();
         document.addEventListener('livewire:navigated', updateClock);
+
+        // Welcome Voice Greeting
+        window.addEventListener('playWelcome', (event) => {
+            const userName = event.detail.name || '';
+            const message = `Selamat datang, ${userName}.`;
+            
+            const speak = () => {
+                const utterance = new SpeechSynthesisUtterance(message);
+                utterance.lang = 'id-ID';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                
+                // Find Indonesian voice if possible
+                const voices = window.speechSynthesis.getVoices();
+                const idVoice = voices.find(v => v.lang === 'id-ID' || v.lang === 'id_ID');
+                if (idVoice) utterance.voice = idVoice;
+                
+                window.speechSynthesis.speak(utterance);
+            };
+
+            if (window.speechSynthesis.getVoices().length === 0) {
+                window.speechSynthesis.onvoiceschanged = speak;
+            } else {
+                speak();
+            }
+        });
     </script>
 </body>
 </html>
