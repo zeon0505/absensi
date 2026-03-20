@@ -111,25 +111,39 @@
                 },
 
                 startScanner() {
+                    const isSecure = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost';
+                    
+                    if (!isSecure) {
+                        alert("Browser memblokir kamera karena koneksi tidak aman (HTTPS required).");
+                        return;
+                    }
+
                     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+                    this.message = '';
+                    this.cameraReady = false;
                     
                     this.html5QrCode.start(
                         { facingMode: "environment" }, 
                         config, 
                         (decodedText) => {
-                            // On success
                             this.scanning = false;
+                            this.stopScanner();
+                            this.message = 'Memproses Kode QR...';
                             Livewire.dispatch('processQrCode', { code: decodedText });
                         },
                         (errorMessage) => {
-                            // On failure (ignore usually)
+                            // Ignored (frequent polling)
                         }
                     ).then(() => {
                         this.scanning = true;
                         this.cameraReady = true;
                     }).catch(err => {
                         console.error("Camera fail", err);
-                        alert("Gagal mengakses kamera. Mohon berikan izin kamera.");
+                        if (err.toString().includes("Permission")) {
+                            alert("Izin kamera ditolak. Silakan berikan izin melalui menu pengaturan browser di pojok kiri atas (ikon gembok).");
+                        } else {
+                            alert("Gagal mengakses kamera: " + err);
+                        }
                     });
                 },
 
