@@ -42,6 +42,18 @@
                         <div class="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
                         <p class="text-[14px] font-bold text-white uppercase tracking-[0.2em] animate-pulse">Memproses Absensi...</p>
                     </div>
+
+                    <!-- Success State -->
+                    <div x-show="showSuccess" 
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0 scale-50"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         class="absolute inset-0 flex flex-col items-center justify-center bg-emerald-500/95 z-50 backdrop-blur-md">
+                        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce">
+                            <svg class="w-16 h-16 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <p class="text-[18px] font-bold text-white mt-8 uppercase tracking-[0.3em]">Absensi Berhasil!</p>
+                    </div>
                 </div>
             </div>
 
@@ -97,6 +109,7 @@
                 scanning: false,
                 cameraReady: false,
                 processing: false,
+                showSuccess: false,
                 message: '',
                 messageType: 'success',
                 
@@ -105,10 +118,14 @@
                     
                     window.addEventListener('qrSuccess', (e) => {
                         this.processing = false;
+                        this.showSuccess = true;
                         this.message = e.detail[0];
                         this.messageType = 'success';
                         this.stopScanner();
-                        setTimeout(() => this.message = '', 5000);
+                        setTimeout(() => {
+                            this.showSuccess = false;
+                            this.message = '';
+                        }, 4000);
                     });
 
                     window.addEventListener('qrError', (e) => {
