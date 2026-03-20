@@ -11,8 +11,16 @@ class CheckIn extends Component
     public $latitude;
     public $longitude;
     public $status = 'hadir';
+    public $selectedClassId;
+    public $step = 1; // 1: Select Class, 2: GPS Check-in
 
     protected $listeners = ['updateLocation'];
+
+    public function selectClass($id)
+    {
+        $this->selectedClassId = $id;
+        $this->step = 2;
+    }
 
     public function updateLocation($lat, $lng)
     {
@@ -22,6 +30,11 @@ class CheckIn extends Component
 
     public function checkIn()
     {
+        if (!$this->selectedClassId) {
+            session()->flash('error', 'Silakan pilih kelas terlebih dahulu.');
+            return;
+        }
+
         $now = Carbon::now();
         $startTime = Carbon::createFromTimeString('08:00:00');
         
@@ -31,6 +44,7 @@ class CheckIn extends Component
 
         Attendance::create([
             'user_id' => auth()->id(),
+            'classroom_id' => $this->selectedClassId,
             'date' => $now->toDateString(),
             'check_in' => $now->toTimeString(),
             'latitude' => $this->latitude,
@@ -38,7 +52,7 @@ class CheckIn extends Component
             'status' => $this->status,
         ]);
 
-        auth()->user()->notify(new \App\Notifications\AttendanceNotification("Anda berhasil melakukan check-in pada pukul {$now->format('H:i:s')}."));
+        auth()->user()->notify(new \App\Notifications\AttendanceNotification("Anda berhasil melakukan check-in GPS pada pukul {$now->format('H:i:s')}."));
 
         session()->flash('message', 'Berhasil check-in!');
         return redirect()->route('dashboard');
@@ -46,6 +60,7 @@ class CheckIn extends Component
 
     public function render()
     {
-        return view('livewire.attendance.check-in');
+        $classrooms = auth()->user()->classrooms()->wherePivot('status', 'approved')->get();
+        return view('livewire.attendance.check-in', compact('classrooms'));
     }
 }
